@@ -1,0 +1,6 @@
+{
+    "dotnet.defaultSolution": "Incidencias.sln",
+    "conventionalCommits.scopes": [
+        "API"
+    ]
+}
