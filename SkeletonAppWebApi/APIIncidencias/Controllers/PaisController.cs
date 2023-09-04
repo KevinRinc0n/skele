@@ -3,6 +3,8 @@ using AutoMapper;
 using Dominio.Interfaces;
 using APIIncidencias.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using APIIncidencias.Helpers;
 
 namespace APIIncidencias.Controllers;
 
@@ -24,10 +26,11 @@ public class PaisController : BaseApiController
     [MapToApiVersion("1.1")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<IEnumerable<PaisDto>>> Get()
+    public async Task<ActionResult<Pager<PaisDto>>> Get11([FromQuery] Params paisParams)
     {
-        var Paises = await unitofwork.Paises.GetAllAsync();
-        return mapper.Map<List<PaisDto>>(Paises);
+        var Paises = await unitofwork.Paises.GetAllAsync(paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
+        var listPaisesDto = mapper.Map<List<PaisDto>>(Paises.registros);
+        return new Pager<PaisDto>(listPaisesDto, Paises.totalRegistros, paisParams.PageIndex, paisParams.PageSize, paisParams.Search);
     }
 
     [HttpGet("{id}")]
